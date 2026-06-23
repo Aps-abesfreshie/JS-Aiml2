@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Helicopter Fly Game</title>
+
+<style>
+body{
+margin:0;
+font-family:Arial;
+text-align:center;
+background:#111;
+color:white;
+}
+
+#menu{
+padding:20px;
+}
+
+canvas{
+border:3px solid white;
+background:#87ceeb;
+}
+
+select,button{
+padding:8px;
+margin:5px;
+font-size:16px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Helicopter Flying Game</h1>
+
+<div id="menu">
+
+<label>Choose Time:</label>
+<select id="time">
+<option value="morning">Morning</option>
+<option value="day">Day</option>
+<option value="evening">Evening</option>
+<option value="night">Night</option>
+</select>
+
+<br>
+
+<label>Choose Environment:</label>
+<select id="place">
+<option value="city">City</option>
+<option value="mountain">Mountain</option>
+<option value="ocean">Ocean</option>
+</select>
+
+<br>
+
+<button onclick="startGame()">Start Game</button>
+
+</div>
+
+<canvas id="gameCanvas" width="800" height="400"></canvas>
+
+<script>
+
+let canvas=document.getElementById("gameCanvas");
+let ctx=canvas.getContext("2d");
+
+let helicopter={
+x:100,
+y:200,
+size:30
+};
+
+let keys={};
+
+document.addEventListener("keydown",e=>keys[e.key]=true);
+document.addEventListener("keyup",e=>keys[e.key]=false);
+
+let bgColor="#87ceeb";
+let environment="city";
+
+function startGame(){
+
+let time=document.getElementById("time").value;
+environment=document.getElementById("place").value;
+
+if(time=="morning") bgColor="#FFD580";
+if(time=="day") bgColor="#87CEEB";
+if(time=="evening") bgColor="#FF8C69";
+if(time=="night") bgColor="#0b0b3b";
+
+gameLoop();
+
+}
+
+function drawBackground(){
+
+ctx.fillStyle=bgColor;
+ctx.fillRect(0,0,800,400);
+
+if(environment=="city"){
+ctx.fillStyle="gray";
+
+for(let i=0;i<8;i++){
+ctx.fillRect(i*100,300,60,100);
+}
+}
+
+if(environment=="mountain"){
+ctx.fillStyle="brown";
+
+ctx.beginPath();
+ctx.moveTo(0,300);
+ctx.lineTo(200,150);
+ctx.lineTo(400,300);
+ctx.fill();
+
+ctx.beginPath();
+ctx.moveTo(300,300);
+ctx.lineTo(500,170);
+ctx.lineTo(700,300);
+ctx.fill();
+}
+
+if(environment=="ocean"){
+ctx.fillStyle="blue";
+ctx.fillRect(0,300,800,100);
+}
+
+}
+
+function drawHelicopter(){
+
+ctx.fillStyle="black";
+ctx.fillRect(helicopter.x,helicopter.y,60,20);
+
+ctx.fillRect(helicopter.x+25,helicopter.y-10,10,10);
+
+ctx.fillRect(helicopter.x-20,helicopter.y+8,20,5);
+
+}
+
+function update(){
+
+if(keys["ArrowUp"]) helicopter.y-=4;
+if(keys["ArrowDown"]) helicopter.y+=4;
+if(keys["ArrowLeft"]) helicopter.x-=4;
+if(keys["ArrowRight"]) helicopter.x+=4;
+
+}
+
+function gameLoop(){
+
+update();
+
+drawBackground();
+drawHelicopter();
+
+requestAnimationFrame(gameLoop);
+
+}
+
+</script>
+
+</body>
+</html>
